@@ -1,0 +1,7 @@
+{
+  "/posicao": {
+    "target": "https://challenge-backend.mobi7.io",
+    "secure": false,
+    "changeOrigin": true
+  }
+}
