@@ -1,0 +1,10 @@
+<section class="dashboard">
+  <h1>Tempo em POIs por Veículo</h1>
+
+  <app-filters [plates]="plates" (search)="onSearch($event)"> </app-filters>
+
+  <div *ngIf="loading" class="status">Carregando...</div>
+  <div *ngIf="error" class="status error">{{ error }}</div>
+
+  <app-dwell-table [rows]="rows"></app-dwell-table>
+</section>

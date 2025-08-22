@@ -1,0 +1,16 @@
+.filters {
+  .row {
+    display: flex;
+    gap: 12px;
+    align-items: end;
+    flex-wrap: wrap;
+  }
+  label {
+    display: flex;
+    flex-direction: column;
+    font-weight: 600;
+  }
+  select, input, button {
+    height: 36px;
+  }
+}

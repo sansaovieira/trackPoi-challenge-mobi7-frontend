@@ -1,0 +1,19 @@
+<form (ngSubmit)="submit()" [formGroup]="form" class="filters">
+  <div class="row">
+    <label>
+      Placa:
+      <select formControlName="placa">
+        <option value="">Todas</option>
+        <option *ngFor="let p of plates" [value]="p">{{ p }}</option>
+      </select>
+    </label>
+
+    <label>
+      Data (MM/DD/YYYY):
+      <input formControlName="data" placeholder="12/16/2018" />
+    </label>
+
+    <button type="submit">Buscar</button>
+    <button type="button" (click)="clear()">Limpar</button>
+  </div>
+</form>

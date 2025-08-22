@@ -1,0 +1,24 @@
+.table-wrapper {
+  width: 100%;
+  .actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 8px;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    th, td {
+      border-bottom: 1px solid #e5e7eb;
+      padding: 8px 10px;
+      text-align: left;
+    }
+    thead th {
+      background: #f8fafc;
+      font-weight: 700;
+    }
+    tbody tr:hover {
+      background: #f3f4f6;
+    }
+  }
+}

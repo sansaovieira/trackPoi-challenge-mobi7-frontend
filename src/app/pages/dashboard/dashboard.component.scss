@@ -1,0 +1,15 @@
+.dashboard {
+  max-width: 1000px;
+  margin: 24px auto;
+  padding: 0 16px;
+
+  h1 {
+    font-size: 24px;
+    margin-bottom: 16px;
+  }
+
+  .status {
+    margin: 12px 0;
+    &.error { color: #b91c1c; }
+  }
+}
