@@ -73,9 +73,6 @@ trackpoi-frontend/
 ## 🖼️ Screenshot do Projeto
 
 ![TrackPOI Frontend Screenshot](https://raw.githubusercontent.com/sansaovieira/trackPoi-challenge-mobi7-frontend/main/src/assets/img-main.png)
-
-> Se a imagem não carregar no preview do GitHub, confirme que `img-main.png` está em `src/assets/` no branch `main`.
-
 ---
 
 ## ✅ Conclusão
