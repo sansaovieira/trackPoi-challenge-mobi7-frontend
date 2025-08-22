@@ -9,3 +9,6 @@ button:hover { opacity: .9; }
 select, input {
   border: 1px solid #d1d5db; border-radius: 8px; padding: 0 10px;
 }
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

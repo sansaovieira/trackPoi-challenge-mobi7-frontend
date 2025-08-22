@@ -1,0 +1,7 @@
+<div class="map-container" *ngIf="mapUrl">
+  <iframe [src]="mapUrl | safeUrl" allowfullscreen loading="lazy"> </iframe>
+</div>
+
+<div *ngIf="!mapUrl">
+  <p>Nenhum POI ou posição disponível para mostrar no mapa.</p>
+</div>

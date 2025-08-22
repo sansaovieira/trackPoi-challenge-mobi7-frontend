@@ -7,7 +7,6 @@ export function msToHHMMSS(ms: number): string {
   return `${pad(h)}:${pad(m)}:${pad(s)}`;
 }
 
-// Backend espera MM/DD/YYYY; util simples para montar essa data
 export function toBackendDate(d: Date): string {
   const mm = (d.getMonth() + 1).toString().padStart(2, '0');
   const dd = d.getDate().toString().padStart(2, '0');

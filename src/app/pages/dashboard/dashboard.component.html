@@ -1,10 +1,31 @@
 <section class="dashboard">
   <h1>Tempo em POIs por Veículo</h1>
 
-  <app-filters [plates]="plates" (search)="onSearch($event)"> </app-filters>
+  <div class="filters">
+    <input
+      type="text"
+      placeholder="Digite a placa"
+      [(ngModel)]="filterPlaca"
+      class="input-field"
+    />
+    <input
+      type="date"
+      [(ngModel)]="filterData"
+      class="input-field"
+      [min]="minDate"
+      [max]="maxDate"
+    />
+    <button
+      class="btn-primary"
+      (click)="onSearch({ placa: filterPlaca, data: filterData })"
+    >
+      Filtrar
+    </button>
+    <button class="btn-secondary" (click)="onClear()">Limpar</button>
+  </div>
 
   <div *ngIf="loading" class="status">Carregando...</div>
   <div *ngIf="error" class="status error">{{ error }}</div>
-
-  <app-dwell-table [rows]="rows"></app-dwell-table>
 </section>
+
+<app-dwell-table [rows]="rows"></app-dwell-table>

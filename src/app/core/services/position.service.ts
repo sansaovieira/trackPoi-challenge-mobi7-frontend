@@ -7,7 +7,10 @@ import { Position } from '../models/position.model';
 export class PositionService {
   private api = inject(ApiService);
 
-  getPositions(placa?: string | null, data?: string | null): Observable<Position[]> {
+  getPositions(
+    placa?: string | null,
+    data?: string | null
+  ): Observable<Position[]> {
     return this.api.listPositions(placa, data);
   }
 

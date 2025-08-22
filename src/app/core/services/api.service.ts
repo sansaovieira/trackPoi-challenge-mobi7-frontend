@@ -14,15 +14,17 @@ export class ApiService {
     return this.http.get<string[]>(`${this.base}/posicao/placas`);
   }
 
-  listPositions(placa?: string | null, data?: string | null): Observable<Position[]> {
+  listPositions(
+    placa?: string | null,
+    data?: string | null
+  ): Observable<Position[]> {
     let params = new HttpParams();
     if (placa) params = params.set('placa', placa);
-    if (data) params = params.set('data', data); // ex: 12/16/2018
+    if (data) params = params.set('data', data);
     return this.http.get<Position[]>(`${this.base}/posicao/`, { params });
   }
 
   listPois(): Observable<Poi[]> {
-    // Assumindo que o backend expõe /pois no mesmo domínio
     return this.http.get<Poi[]>(`${this.base}/pois`);
   }
 

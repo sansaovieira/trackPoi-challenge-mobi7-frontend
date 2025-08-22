@@ -1,24 +1,70 @@
 .table-wrapper {
-  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto 40px auto;
+  padding: 0 20px;
+
   .actions {
-    display: flex;
-    justify-content: flex-end;
-    margin-bottom: 8px;
+    text-align: right;
+    margin-bottom: 10px;
+
+    .btn-primary {
+      padding: 8px 16px;
+      background-color: #4caf50;
+      color: #fff;
+      border-radius: 8px;
+      border: none;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.3s;
+
+      &:hover {
+        background-color: #43a047;
+      }
+    }
   }
+
   table {
     width: 100%;
     border-collapse: collapse;
-    th, td {
-      border-bottom: 1px solid #e5e7eb;
-      padding: 8px 10px;
-      text-align: left;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    border-radius: 12px;
+    overflow: hidden;
+
+    th,
+    td {
+      padding: 12px 15px;
+      text-align: center;
+      border-bottom: 1px solid #ddd;
     }
-    thead th {
-      background: #f8fafc;
-      font-weight: 700;
+
+    th {
+      background-color: #4caf50;
+      color: white;
+      font-size: 16px;
     }
-    tbody tr:hover {
-      background: #f3f4f6;
+
+    tr:nth-child(even) {
+      background-color: #f9f9f9;
     }
+
+    .btn-map {
+      background: none;
+      border: none;
+      color: #4caf50;
+      font-weight: bold;
+      cursor: pointer;
+      text-decoration: underline;
+
+      &:hover {
+        color: #388e3c;
+      }
+    }
+  }
+
+  .empty-text {
+    text-align: center;
+    margin: 20px 0;
+    font-size: 16px;
+    color: #666;
   }
 }

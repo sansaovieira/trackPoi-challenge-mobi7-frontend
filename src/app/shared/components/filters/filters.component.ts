@@ -6,15 +6,18 @@ import { CommonModule } from '@angular/common';
   selector: 'app-filters',
   standalone: false,
   templateUrl: './filters.component.html',
-  styleUrls: ['./filters.component.scss']
+  styleUrls: ['./filters.component.scss'],
 })
 export class FiltersComponent {
   @Input() plates: string[] = [];
-  @Output() search = new EventEmitter<{ placa: string | null; data: string | null }>();
+  @Output() search = new EventEmitter<{
+    placa: string | null;
+    data: string | null;
+  }>();
 
   form = this.fb.group({
     placa: [''],
-    data: [''] // input text no formato MM/DD/YYYY (igual ao endpoint)
+    data: [''],
   });
 
   constructor(private fb: FormBuilder) {}

@@ -2,68 +2,60 @@ import { Injectable } from '@angular/core';
 import { Position } from '../models/position.model';
 import { Poi } from '../models/poi.model';
 import { DwellEntry } from '../models/dwell.model';
-import { isInsidePoi } from '../utils/geo.utils';
-import { msToHHMMSS } from '../utils/time.utils';
 
-/**
- * Regras de negócio:
- * - Ordena posições por data asc
- * - Para cada POI, percorre posições do veículo e soma os intervalos onde a posição está "inside"
- * - Intervalo = diferença entre timestamps consecutivos enquanto permanecer dentro
- * - No último ponto "inside", não extrapola além do último sample
- * - Ignora velocidade/ignição para o cálculo de "tempo dentro da região" (escopo pedido)
- */
 @Injectable({ providedIn: 'root' })
 export class DwellService {
-
   computeDwell(positions: Position[], pois: Poi[]): DwellEntry[] {
-    if (!positions?.length || !pois?.length) return [];
-
-    // group por placa
-    const byPlate = new Map<string, Position[]>();
-    positions.forEach(p => {
-      if (!byPlate.has(p.placa)) byPlate.set(p.placa, []);
-      byPlate.get(p.placa)!.push(p);
-    });
-
     const results: DwellEntry[] = [];
 
-    for (const [placa, arr] of byPlate.entries()) {
-      // ordenado por data
-      const sorted = [...arr].sort((a, b) => (new Date(a.data).getTime() - new Date(b.data).getTime()));
+    pois.forEach((poi) => {
+      const positionsInPoi = positions.filter((pos) => {
+        const distance = this.getDistance(
+          poi.latitude,
+          poi.longitude,
+          pos.latitude,
+          pos.longitude
+        );
+        return distance <= (poi.raio ?? 50);
+      });
 
-      for (const poi of pois) {
-        let totalMs = 0;
-        let prev: Position | null = null;
-        let prevInside = false;
-
-        for (const cur of sorted) {
-          const inside = isInsidePoi(cur.latitude, cur.longitude, poi.latitude, poi.longitude, poi.raio);
-
-          if (prev) {
-            // se dois pontos consecutivos estão inside -> soma delta
-            if (prevInside && inside) {
-              const delta = new Date(cur.data).getTime() - new Date(prev.data).getTime();
-              if (delta > 0) totalMs += delta;
-            }
-          }
-
-          prev = cur;
-          prevInside = inside;
-        }
-
-        if (totalMs > 0) {
-          results.push({
-            placa,
-            poi: poi.nome,
-            totalMs,
-            totalHuman: msToHHMMSS(totalMs),
-          });
-        }
+      const totalMs = positionsInPoi.length * 1000;
+      if (totalMs > 0) {
+        results.push({
+          placa: positionsInPoi[0].placa,
+          poi: poi,
+          totalMs: totalMs,
+          totalHuman: this.msToHuman(totalMs),
+        });
       }
-    }
+    });
 
-    // ordena por maior tempo
-    return results.sort((a, b) => b.totalMs - a.totalMs);
+    return results;
+  }
+
+  private getDistance(lat1: number, lon1: number, lat2: number, lon2: number) {
+    const R = 6371000;
+    const dLat = this.toRad(lat2 - lat1);
+    const dLon = this.toRad(lon2 - lon1);
+    const a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(this.toRad(lat1)) *
+        Math.cos(this.toRad(lat2)) *
+        Math.sin(dLon / 2) *
+        Math.sin(dLon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    return R * c;
+  }
+
+  private toRad(value: number) {
+    return (value * Math.PI) / 180;
+  }
+
+  private msToHuman(ms: number): string {
+    const seconds = Math.floor(ms / 1000);
+    const h = Math.floor(seconds / 3600);
+    const m = Math.floor((seconds % 3600) / 60);
+    const s = seconds % 60;
+    return `${h}:${m}:${s}`;
   }
 }

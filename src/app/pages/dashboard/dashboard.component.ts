@@ -1,65 +1,92 @@
 import { Component, OnInit, inject } from '@angular/core';
-import { DwellEntry } from 'src/app/core/models/dwell.model';
-import { Poi } from 'src/app/core/models/poi.model';
-import { Position } from 'src/app/core/models/position.model';
-import { DwellService } from 'src/app/core/services/dwell.service';
-import { PoiService } from 'src/app/core/services/poi.service';
 import { PositionService } from 'src/app/core/services/position.service';
+import { PoiService } from 'src/app/core/services/poi.service';
+import { DwellService } from 'src/app/core/services/dwell.service';
+import { Position } from 'src/app/core/models/position.model';
+import { Poi } from 'src/app/core/models/poi.model';
+import { DwellEntry } from 'src/app/core/models/dwell.model';
+import { forkJoin } from 'rxjs';
 
 @Component({
- selector: 'app-dashboard-page',
-  templateUrl: './dashboard.component.html', // ajuste no próximo passo
-  styleUrls: ['./dashboard.component.scss']
+  selector: 'app-dashboard-page',
+  templateUrl: './dashboard.component.html',
+  styleUrls: ['./dashboard.component.scss'],
 })
 export class DashboardPageComponent implements OnInit {
   private positionService = inject(PositionService);
   private poiService = inject(PoiService);
   private dwellService = inject(DwellService);
 
-  plates: string[] = [];
+  filterPlaca: string = '';
+  filterData: string = '';
+  minDate: string = '1990-01-01';
+  maxDate: string = new Date().toISOString().split('T')[0];
+
+  rows: DwellEntry[] = [];
+  vehiclePositions: Position[] = [];
+  allPositions: Position[] = [];
   pois: Poi[] = [];
 
   loading = false;
   error: string | null = null;
 
-  rows: DwellEntry[] = [];
-
   ngOnInit(): void {
-    this.loadInitial();
+    this.loadInitialData();
   }
 
-  private loadInitial() {
+  private loadInitialData() {
     this.loading = true;
     this.error = null;
 
-    // Carrega placas e POIs em paralelo
-    this.positionService.getPlates().subscribe({
-      next: (plates) => this.plates = plates ?? [],
-      error: () => this.error = 'Falha ao carregar placas.'
+    forkJoin({
+      positions: this.positionService.getPositions(),
+      pois: this.poiService.getPois(),
+    }).subscribe({
+      next: ({ positions, pois }) => {
+        this.allPositions = positions ?? [];
+        this.vehiclePositions = [...this.allPositions];
+        this.pois = pois ?? [];
+        this.updateRows();
+        this.loading = false;
+      },
+      error: () => {
+        this.error = 'Falha ao carregar dados iniciais.';
+        this.loading = false;
+      },
     });
+  }
 
-    this.poiService.getPois().subscribe({
-      next: (pois) => this.pois = pois ?? [],
-      error: () => this.error = 'Falha ao carregar POIs.',
-      complete: () => this.loading = false
-    });
+  private updateRows() {
+    if (!this.pois.length || !this.vehiclePositions.length) {
+      this.rows = [];
+      return;
+    }
+    this.rows = this.dwellService.computeDwell(
+      this.vehiclePositions,
+      this.pois
+    );
   }
 
   onSearch(filter: { placa: string | null; data: string | null }) {
-    this.loading = true;
-    this.error = null;
-    this.rows = [];
+    this.vehiclePositions = this.allPositions.filter((pos) => {
+      const placaMatch = filter.placa ? pos.placa.includes(filter.placa) : true;
 
-    this.positionService.getPositions(filter.placa, filter.data).subscribe({
-      next: (positions: Position[]) => {
-        if (!positions?.length) {
-          this.rows = [];
-          return;
-        }
-        this.rows = this.dwellService.computeDwell(positions, this.pois);
-      },
-      error: () => this.error = 'Falha ao buscar posições.',
-      complete: () => this.loading = false
+      let dataMatch = true;
+      if (filter.data) {
+        const d = new Date(filter.data);
+        const dataIso = d.toISOString().slice(0, 10);
+        dataMatch = !!(pos.data && pos.data.startsWith(dataIso));
+      }
+
+      return placaMatch && dataMatch;
     });
+    this.updateRows();
+  }
+
+  onClear() {
+    this.filterPlaca = '';
+    this.filterData = '';
+    this.vehiclePositions = [...this.allPositions];
+    this.updateRows();
   }
 }

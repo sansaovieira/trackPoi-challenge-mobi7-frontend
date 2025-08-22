@@ -1,15 +1,56 @@
 .dashboard {
-  max-width: 1000px;
-  margin: 24px auto;
-  padding: 0 16px;
+  max-width: 1200px;
+  margin: 20px auto;
+  padding: 0 20px;
+}
 
-  h1 {
-    font-size: 24px;
-    margin-bottom: 16px;
-  }
+.filters {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+  align-items: center;
+}
 
-  .status {
-    margin: 12px 0;
-    &.error { color: #b91c1c; }
-  }
+.input-field {
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+button.btn-primary {
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+button.btn-secondary {
+  background-color: #f44336;
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.date-field {
+  width: 250px;
+}
+
+input[type="text"] {
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+.status {
+  margin-bottom: 15px;
+  font-weight: bold;
+}
+
+.status.error {
+  color: red;
 }
