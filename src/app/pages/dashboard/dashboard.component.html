@@ -17,10 +17,13 @@
     />
     <button
       class="btn-primary"
-      (click)="onSearch({ placa: filterPlaca, data: filterData })"
+      (click)="
+        onSearch({ placa: filterPlaca || null, data: filterData || null })
+      "
     >
       Filtrar
     </button>
+
     <button class="btn-secondary" (click)="onClear()">Limpar</button>
   </div>
 
