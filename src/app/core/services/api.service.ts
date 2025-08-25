@@ -21,7 +21,7 @@ export class ApiService {
     let params = new HttpParams();
     if (placa) params = params.set('placa', placa);
     if (data) params = params.set('data', data);
-    return this.http.get<Position[]>(`${this.base}/posicao/`, { params });
+    return this.http.get<Position[]>(`${this.base}/posicao`, { params });
   }
 
   listPois(): Observable<Poi[]> {
