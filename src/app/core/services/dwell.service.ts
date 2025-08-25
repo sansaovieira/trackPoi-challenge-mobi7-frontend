@@ -77,7 +77,7 @@ export class DwellService {
   }
 
   private getDistance(lat1: number, lon1: number, lat2: number, lon2: number) {
-    const R = 6371000; // metros
+    const R = 6371000;
     const dLat = this.toRad(lat2 - lat1);
     const dLon = this.toRad(lon2 - lon1);
     const a =
